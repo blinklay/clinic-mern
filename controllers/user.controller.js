@@ -13,7 +13,7 @@ async function login(req, res) {
       })
     }
 
-    const isValidPassword = await bcrypt.compare(password, user.password)
+    const isValidPassword = await bcrypt.compare(req.body.password, user.password)
 
     if (!isValidPassword) {
       return res.status(400).json({
@@ -30,7 +30,7 @@ async function login(req, res) {
 
     res.cookie("token", token, { httpOnly: true })
     res.status(200).json({
-      message: "Успешная авторищация!"
+      message: "Успешная авторизация!"
     })
   } catch (error) {
     console.log(error);
