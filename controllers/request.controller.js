@@ -1,7 +1,13 @@
+const { validationResult } = require("express-validator");
 const Request = require("../models/Request.model");
 
 async function createRequest(req, res) {
   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json(errors.array())
+    }
+
     const newRequest = new Request({
       fullName: req.body.fullName,
       phoneNumber: req.body.phoneNumber,
