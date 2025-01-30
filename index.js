@@ -2,7 +2,8 @@ const express = require("express")
 const { login } = require("./controllers/user.controller")
 const { default: mongoose } = require("mongoose")
 const cookieParser = require("cookie-parser");
-const { createRequest } = require("./controllers/request.controller");
+const { createRequest, getRequests, deleteRequest } = require("./controllers/request.controller");
+const checkAuth = require("./middlewares/checkAuth");
 
 const PORT = process.env.PORT || 8080
 const app = express()
@@ -18,8 +19,12 @@ mongoose.connect("mongodb+srv://admin:123qwe@cluster0.d86hc.mongodb.net/?retryWr
     console.log(err);
   })
 
+app.get("/request", checkAuth, getRequests)
+
 app.post("/login", login)
 app.post("/request", createRequest)
+
+app.delete("/request/:id", checkAuth, deleteRequest)
 
 app.listen(PORT, (err) => {
   if (err) {

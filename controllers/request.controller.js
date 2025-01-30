@@ -21,6 +21,33 @@ async function createRequest(req, res) {
   }
 }
 
+async function getRequests(req, res) {
+  try {
+    const requests = await Request.find()
+    res.status(200).json(requests)
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Не удалось получить заявки!"
+    })
+  }
+}
+
+async function deleteRequest(req, res) {
+  try {
+    const { id } = req.params
+    await Request.findByIdAndDelete(id)
+    res.status(200).json({
+      message: "Заявка удалена!"
+    })
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Не удалось удалить заявку!"
+    })
+  }
+}
+
 module.exports = {
-  createRequest
+  createRequest, getRequests, deleteRequest
 }
