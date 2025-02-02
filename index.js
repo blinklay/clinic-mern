@@ -6,12 +6,14 @@ const { createRequest, getRequests, deleteRequest } = require("./controllers/req
 const checkAuth = require("./middlewares/checkAuth");
 const requestValidator = require("./validations/request.validator");
 const loginValidator = require("./validations/login.validator");
+const cors = require('cors');
 
 const PORT = process.env.PORT || 8080
 const app = express()
 
 app.use(cookieParser());
 app.use(express.json())
+app.use(cors())
 
 mongoose.connect("mongodb+srv://admin:123qwe@cluster0.d86hc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
   .then(() => {

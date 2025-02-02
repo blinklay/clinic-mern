@@ -9,10 +9,7 @@ const RequestSchema = new Schema({
     type: String,
     required: true
   },
-  description: {
-    type: String,
-    required: true
-  }
+  description: String
 }, {
   timestamps: true
 })
