@@ -33,7 +33,12 @@ async function login(req, res) {
       expiresIn: "24h"
     })
 
-    res.cookie("token", token, { httpOnly: true })
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "None",
+      path: "/",
+    })
     res.status(200).json({
       message: "Успешная авторизация!"
     })

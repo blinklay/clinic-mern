@@ -32,6 +32,8 @@ export default function HomePage() {
   }, [successMessage]);
 
   const onSubmit = (data) => {
+    console.log(data);
+
     dispatch(createRequest(data));
   };
 
@@ -98,9 +100,15 @@ export default function HomePage() {
             {errors.phoneNumber.message}
           </Alert>
         )}
-        <Form.Group className="mb-3" controlId="fullName">
+        <Form.Group className="mb-3" controlId="description">
           <Form.Label>Текст обращения:</Form.Label>
-          <Form.Control disabled={isCreating} as="textarea" rows={3} />
+          <Form.Control
+            {...register("description")}
+            disabled={isCreating}
+            as="textarea"
+            rows={3}
+            name="description"
+          />
         </Form.Group>
 
         <Button disabled={isCreating} variant="primary" type="submit">

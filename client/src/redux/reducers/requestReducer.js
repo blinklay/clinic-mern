@@ -6,7 +6,8 @@ const initialState = {
     status: null
   },
   successMessage: null,
-  isCreating: false
+  isCreating: false,
+  isLoading: false
 }
 
 export const requestReducer = (state = initialState, action) => {
@@ -25,6 +26,16 @@ export const requestReducer = (state = initialState, action) => {
       return {
         ...state,
         successMessage: payload
+      }
+    case "SET_IS_LOADING":
+      return {
+        ...state,
+        isLoading: payload
+      }
+    case "SET_REQUESTS":
+      return {
+        ...state,
+        requests: payload
       }
     case "SET_IS_CREATEING":
       return {

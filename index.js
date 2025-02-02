@@ -13,7 +13,10 @@ const app = express()
 
 app.use(cookieParser());
 app.use(express.json())
-app.use(cors())
+app.use(cors({
+  origin: "http://localhost:5173",
+  credentials: true
+}))
 
 mongoose.connect("mongodb+srv://admin:123qwe@cluster0.d86hc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
   .then(() => {

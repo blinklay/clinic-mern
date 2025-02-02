@@ -9,7 +9,7 @@ export const login = (data) => {
       body: JSON.stringify({
         email: data.login,
         password: data.password
-      })
+      }), credentials: "include",
     })
       .then(async (res) => {
         const data = await res.json()
