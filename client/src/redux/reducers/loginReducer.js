@@ -1,15 +1,14 @@
 const initialState = {
-  requests: [],
   errors: {
-    msg: "",
-    validationsError: [],
-    status: null
+    validationErrors: [],
+    status: null,
+    msg: ""
   },
-  successMessage: null,
-  isCreating: false
+  isLogining: false,
+  successMessage: null
 }
 
-export const requestReducer = (state = initialState, action) => {
+export const loginReducer = (state = initialState, action) => {
   const { type, payload } = action;
 
   switch (type) {
@@ -26,10 +25,10 @@ export const requestReducer = (state = initialState, action) => {
         ...state,
         successMessage: payload
       }
-    case "SET_IS_CREATEING":
+    case "SET_LOGINING":
       return {
         ...state,
-        isCreating: payload
+        isLogining: payload
       }
     case "SET_ERRORS":
       return {
@@ -39,6 +38,7 @@ export const requestReducer = (state = initialState, action) => {
           ...payload
         }
       }
+
     default:
       return state;
   }
