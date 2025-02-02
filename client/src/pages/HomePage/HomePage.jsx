@@ -4,6 +4,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { Alert } from "react-bootstrap";
 import { createRequest } from "../../redux/actions/createRequest";
+import { motion } from "framer-motion";
+import { fadeIn } from "../../utils/animation";
+import { useEffect, useRef } from "react";
+import {
+  errorsSelector,
+  isCreatingSelector,
+  successMessageSelector,
+} from "../../redux/selectors/requestsSelector";
 
 export default function HomePage() {
   const {
@@ -11,28 +19,47 @@ export default function HomePage() {
     handleSubmit,
     formState: { errors },
   } = useForm();
-
+  const formRef = useRef(null);
   const dispatch = useDispatch();
-  const isCreating = useSelector((state) => state.requests.isCreating);
-  const serverErrors = useSelector((state) => state.requests.errors);
-  const successMessage = useSelector((state) => state.requests.successMessage);
+  const isCreating = useSelector(isCreatingSelector);
+  const serverErrors = useSelector(errorsSelector);
+  const successMessage = useSelector(successMessageSelector);
+
+  useEffect(() => {
+    if (successMessage) {
+      formRef.current.reset();
+    }
+  }, [successMessage]);
+
   const onSubmit = (data) => {
     dispatch(createRequest(data));
   };
 
   return (
     <>
-      {serverErrors.validationsError.map((err) => (
-        <Alert key={err.value} variant="danger">
-          {serverErrors.msg}: {err.msg}
+      <p className="h1">Создание заявки:</p>
+
+      {serverErrors.status === 500 && (
+        <Alert variant="danger">
+          {serverErrors.msg} {serverErrors.status}
         </Alert>
+      )}
+
+      {serverErrors.validationsError.map((err) => (
+        <motion.div key={err.value} {...fadeIn}>
+          <Alert variant="danger">
+            {serverErrors.msg}: {err.msg}
+          </Alert>
+        </motion.div>
       ))}
 
       {successMessage && (
-        <Alert variant="success">{successMessage.message}</Alert>
+        <motion.div {...fadeIn}>
+          <Alert variant="success">{successMessage.message}</Alert>
+        </motion.div>
       )}
 
-      <Form onSubmit={handleSubmit(onSubmit)}>
+      <Form ref={formRef} onSubmit={handleSubmit(onSubmit)}>
         <Form.Group className="mb-3" controlId="fullName">
           <Form.Label>ФИО:</Form.Label>
           <Form.Control

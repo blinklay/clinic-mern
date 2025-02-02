@@ -13,6 +13,14 @@ export const requestReducer = (state = initialState, action) => {
   const { type, payload } = action;
 
   switch (type) {
+    case "RESET_ERRORS":
+      return {
+        ...state,
+        successMessage: null,
+        errors: {
+          ...initialState.errors
+        }
+      }
     case "SET_SUCCESS_MESSAGE":
       return {
         ...state,

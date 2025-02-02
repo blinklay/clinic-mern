@@ -1,5 +1,6 @@
 export const createRequest = (formData) => {
   return (dispatch) => {
+    dispatch({ type: "RESET_ERRORS" })
     dispatch({ type: "SET_IS_CREATEING", payload: true })
     return fetch("http://localhost:8080/request", {
       method: "POST",
