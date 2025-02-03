@@ -29,8 +29,18 @@ async function createRequest(req, res) {
 
 async function getRequests(req, res) {
   try {
-    const requests = await Request.find()
-    res.status(200).json(requests)
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) || 5
+    const skip = (page - 1) * limit;
+
+    const requests = await Request.find().skip(skip).limit(limit)
+    const totalRequests = await Request.countDocuments();
+
+    res.status(200).json({
+      requests,
+      totalPages: Math.ceil(totalRequests / limit),
+      currentPage: page,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({

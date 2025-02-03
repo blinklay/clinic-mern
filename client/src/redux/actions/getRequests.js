@@ -1,8 +1,8 @@
-export const getRequests = () => {
+export const getRequests = (pageNumber) => {
   return (dispatch) => {
     dispatch({ type: "RESET_ERRORS" })
     dispatch({ type: "SET_IS_LOADING", payload: true })
-    return fetch("http://localhost:8080/request", {
+    return fetch(`http://localhost:8080/request?page=${pageNumber}`, {
       method: "GET",
       credentials: "include",
     })
@@ -23,7 +23,7 @@ export const getRequests = () => {
         return data
       })
       .then(data => {
-        dispatch({ type: "SET_REQUESTS", payload: data })
+        dispatch({ type: "SET_REQUESTS", payload: { ...data } })
       })
       .finally(() => [
         dispatch({ type: "SET_IS_LOADING", payload: false })

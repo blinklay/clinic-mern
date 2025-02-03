@@ -2,7 +2,13 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getRequests } from "../../redux/actions/getRequests";
 import { errorsSelector } from "../../redux/selectors/requestsSelector";
-import { Table } from "react-bootstrap";
+import {
+  Button,
+  ButtonGroup,
+  ButtonToolbar,
+  Spinner,
+  Table,
+} from "react-bootstrap";
 import { styled } from "styled-components";
 
 const StyledTable = styled(Table)`
@@ -21,10 +27,15 @@ export default function RequestsPage() {
   const serverErrors = useSelector(errorsSelector);
   const dispatch = useDispatch();
   const requests = useSelector((state) => state.requests.requests);
+  const isLoading = useSelector((state) => state.requests.isLoading);
 
   useEffect(() => {
-    dispatch(getRequests());
+    dispatch(getRequests(1));
   }, []);
+
+  const changePage = (pageNumber) => {
+    dispatch(getRequests(pageNumber));
+  };
 
   return (
     <>
@@ -37,12 +48,19 @@ export default function RequestsPage() {
             <th>ФИО</th>
             <th>Телефон</th>
             <th>Описание</th>
+            <th>Дата создания</th>
           </tr>
         </thead>
         <tbody>
-          {requests.map((request, index) => (
+          {requests.requests.map((request) => (
             <tr key={request._id}>
-              <td>{index}</td>
+              <td>
+                {"#" +
+                  request._id.slice(
+                    request._id.length - 7,
+                    request._id.length - 1
+                  )}
+              </td>
               <td>{request.fullName}</td>
               <td>
                 <a href={`tel:${requests.phoneNumber}`}>
@@ -50,10 +68,27 @@ export default function RequestsPage() {
                 </a>
               </td>
               <td>{request.description}</td>
+              <td>{new Date(request.createdAt).toLocaleString()}</td>
             </tr>
           ))}
         </tbody>
       </StyledTable>
+
+      {isLoading && <Spinner animation="grow" />}
+
+      <ButtonToolbar aria-label="Toolbar with button groups mt-3">
+        <ButtonGroup className="me-2" aria-label="First group">
+          {new Array(requests.totalPages).fill("").map((_, index) => (
+            <Button
+              disabled={requests.currentPage === index + 1}
+              key={index}
+              onClick={() => changePage(index + 1)}
+            >
+              {index + 1}
+            </Button>
+          ))}
+        </ButtonGroup>
+      </ButtonToolbar>
     </>
   );
 }

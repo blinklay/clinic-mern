@@ -5,6 +5,8 @@ import { motion } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../redux/actions/login";
 import { useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+
 import {
   errorsSelector,
   isLoginingSelector,
@@ -18,6 +20,7 @@ export default function LoginPage() {
     formState: { errors },
   } = useForm();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const onSubmit = (data) => {
     dispatch(login(data));
@@ -30,6 +33,12 @@ export default function LoginPage() {
   useEffect(() => {
     if (successMessage) {
       formRef.current.reset();
+
+      const timerRedirect = setTimeout(() => {
+        navigate("/requests");
+      }, 1000);
+
+      return () => clearTimeout(timerRedirect);
     }
   }, [successMessage]);
 

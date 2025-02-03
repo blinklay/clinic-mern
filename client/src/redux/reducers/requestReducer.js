@@ -1,5 +1,9 @@
 const initialState = {
-  requests: [],
+  requests: {
+    requests: [],
+    totalPages: 1,
+    currentPage: 1,
+  },
   errors: {
     msg: "",
     validationsError: [],
