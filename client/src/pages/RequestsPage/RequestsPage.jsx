@@ -1,7 +1,11 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getRequests } from "../../redux/actions/getRequests";
-import { errorsSelector } from "../../redux/selectors/requestsSelector";
+import {
+  errorsSelector,
+  isLoadingSelector,
+  requestsSelector,
+} from "../../redux/selectors/requestsSelector";
 import {
   Alert,
   Button,
@@ -25,23 +29,21 @@ const StyledTable = styled(Table)`
   }
 `;
 
+const FIRST_PAGE_NUMBER = 1;
+
 export default function RequestsPage() {
   const serverErrors = useSelector(errorsSelector);
   const dispatch = useDispatch();
-  const requests = useSelector((state) => state.requests.requests);
-  const isLoading = useSelector((state) => state.requests.isLoading);
+  const requests = useSelector(requestsSelector);
+  const isLoading = useSelector(isLoadingSelector);
 
   useEffect(() => {
-    dispatch(getRequests(1));
+    dispatch(getRequests(FIRST_PAGE_NUMBER));
   }, []);
 
   const changePage = (pageNumber) => {
     dispatch(getRequests(pageNumber));
   };
-
-  useEffect(() => {
-    console.log(serverErrors.status);
-  }, [serverErrors]);
 
   return (
     <>

@@ -8,10 +8,13 @@ import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 import {
+  currentUserSelector,
   errorsSelector,
   isLoginingSelector,
   successMessageSelector,
 } from "../../redux/selectors/loginSelector";
+import { checkAuth } from "../../redux/actions/checkAuth";
+import { logout } from "../../redux/actions/logout";
 
 export default function LoginPage() {
   const {
@@ -29,6 +32,7 @@ export default function LoginPage() {
   const serverErrors = useSelector(errorsSelector);
   const successMessage = useSelector(successMessageSelector);
   const isLogining = useSelector(isLoginingSelector);
+  const currentUser = useSelector(currentUserSelector);
 
   useEffect(() => {
     if (successMessage) {
@@ -41,6 +45,10 @@ export default function LoginPage() {
       return () => clearTimeout(timerRedirect);
     }
   }, [successMessage]);
+
+  useEffect(() => {
+    dispatch(checkAuth());
+  }, [currentUser]);
 
   return (
     <>
@@ -72,45 +80,56 @@ export default function LoginPage() {
         </motion.div>
       )}
 
-      <Form ref={formRef} onSubmit={handleSubmit(onSubmit)}>
-        <Form.Group className="mb-3" controlId="login">
-          <Form.Label>Логин:</Form.Label>
-          <Form.Control
-            disabled={isLogining}
-            type="text"
-            placeholder="example@email.org"
-            name="login"
-            {...register("login", {
-              required: "Это обязательное поле!",
-            })}
-          />
-        </Form.Group>
-        {errors.login && (
-          <motion.div {...fadeIn}>
-            <Alert variant="danger">{errors.login.message}</Alert>
-          </motion.div>
-        )}
-        <Form.Group className="mb-3" controlId="password">
-          <Form.Label>Пароль:</Form.Label>
-          <Form.Control
-            disabled={isLogining}
-            type="password"
-            placeholder="*******"
-            name="password"
-            {...register("password", {
-              required: "Это обязательное поле!",
-            })}
-          />
-        </Form.Group>
-        {errors.password && (
-          <motion.div {...fadeIn}>
-            <Alert variant="danger">{errors.password.message}</Alert>
-          </motion.div>
-        )}
-        <Button disabled={isLogining} variant="primary" type="submit">
-          {isLogining ? "Загрузка..." : "Войти"}
-        </Button>
-      </Form>
+      {currentUser && (
+        <>
+          <Alert variant="success">Вы уже авторизованный пользователь!</Alert>
+          <Button onClick={() => dispatch(logout())} variant="danger">
+            Выйти
+          </Button>
+        </>
+      )}
+
+      {!currentUser && (
+        <Form ref={formRef} onSubmit={handleSubmit(onSubmit)}>
+          <Form.Group className="mb-3" controlId="login">
+            <Form.Label>Логин:</Form.Label>
+            <Form.Control
+              disabled={isLogining}
+              type="text"
+              placeholder="example@email.org"
+              name="login"
+              {...register("login", {
+                required: "Это обязательное поле!",
+              })}
+            />
+          </Form.Group>
+          {errors.login && (
+            <motion.div {...fadeIn}>
+              <Alert variant="danger">{errors.login.message}</Alert>
+            </motion.div>
+          )}
+          <Form.Group className="mb-3" controlId="password">
+            <Form.Label>Пароль:</Form.Label>
+            <Form.Control
+              disabled={isLogining}
+              type="password"
+              placeholder="*******"
+              name="password"
+              {...register("password", {
+                required: "Это обязательное поле!",
+              })}
+            />
+          </Form.Group>
+          {errors.password && (
+            <motion.div {...fadeIn}>
+              <Alert variant="danger">{errors.password.message}</Alert>
+            </motion.div>
+          )}
+          <Button disabled={isLogining} variant="primary" type="submit">
+            {isLogining ? "Загрузка..." : "Войти"}
+          </Button>
+        </Form>
+      )}
     </>
   );
 }

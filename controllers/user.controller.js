@@ -50,6 +50,39 @@ async function login(req, res) {
   }
 }
 
+async function getMe(req, res) {
+  try {
+    const token = req.cookies.token;
+    if (!token) {
+      return res.status(401).json({
+        message: "Не авторзован!"
+      })
+    }
+
+    const decoded = jwt.verify(token, JWT_SECRET)
+    res.status(200).json({ ...decoded })
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Не удалось получить пользователя!"
+    })
+  }
+}
+
+async function removeMe(req, res) {
+  try {
+    res.clearCookie("token", { httpOnly: true, secure: true, sameSite: "strict" })
+    res.status(200).json({
+      message: "Вы вышли из аккауна!"
+    })
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Не удалось выйти!"
+    })
+  }
+}
+
 module.exports = {
-  login
+  login, getMe, removeMe
 }

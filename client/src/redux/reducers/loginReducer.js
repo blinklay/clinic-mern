@@ -4,6 +4,7 @@ const initialState = {
     status: null,
     msg: ""
   },
+  currentUser: null,
   isLogining: false,
   successMessage: null
 }
@@ -12,6 +13,11 @@ export const loginReducer = (state = initialState, action) => {
   const { type, payload } = action;
 
   switch (type) {
+    case "SET_CURRET_USER":
+      return {
+        ...state,
+        currentUser: payload
+      }
     case "RESET_ERRORS":
       return {
         ...state,

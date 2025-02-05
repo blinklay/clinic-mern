@@ -28,6 +28,8 @@ export const login = (data) => {
         return data
       })
       .then((data) => {
+        console.log(data);
+
         dispatch({ type: "SET_SUCCESS_MESSAGE", payload: data })
       })
       .catch(err => {
