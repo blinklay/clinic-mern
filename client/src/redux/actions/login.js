@@ -1,7 +1,7 @@
 export const login = (data) => {
   return (dispatch) => {
-    dispatch({ type: "SET_LOGINING", payload: true })
     dispatch({ type: "RESET_ERRORS" })
+    dispatch({ type: "SET_LOGINING", payload: true })
 
     return fetch("http://localhost:8080/login", {
       method: "POST",

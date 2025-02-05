@@ -25,6 +25,14 @@ export const getRequests = (pageNumber) => {
       .then(data => {
         dispatch({ type: "SET_REQUESTS", payload: { ...data } })
       })
+      .catch(err => {
+        dispatch({
+          type: "SET_ERRORS",
+          payload: {
+            msg: err.message
+          }
+        })
+      })
       .finally(() => [
         dispatch({ type: "SET_IS_LOADING", payload: false })
       ])
